@@ -23,11 +23,6 @@ from game import Grid
 # Team creation #
 #################
 
-# Globals
-# global enemyIndexA = None
-# global enemyIndexB = None
-global AgentClass
-
 def createTeam(firstIndex, secondIndex, isRed,
                first = 'OffensiveReflexAgent', second = 'OffensiveReflexAgent'):
   """
@@ -44,20 +39,7 @@ def createTeam(firstIndex, secondIndex, isRed,
   any extra arguments, so you should make sure that the default
   behavior is what you want for the nightly contest.
   """
-  # global enemyIndexA
-  # global enemyIndexB
-  #
-  # print enemyIndexA
-  # print enemyIndexB
-  # if (firstIndex == 0 and secondIndex == 2 or firstIndex == 2 and secondIndex == 0):
-  #   enemyIndexA = 1
-  #   enemyIndexB = 3
-  # else:
-  #   enemyIndexA = 0
-  #   enemyIndexB = 2
 
-  # global invaderTargetingArray
-  # invaderTargetingArray = [False, False]
   global agentOneTarget
   agentOneTarget = None
 
@@ -73,31 +55,7 @@ def createTeam(firstIndex, secondIndex, isRed,
   global capsulePath
   capsulePath = []
 
-  # global invader1
-  # invader1 = [False, False]
-  #
-  # global invader2
-  # invader2 = [False, False]
-
-  # global AgentClass
-  # AgentClass = ourAgentTracker(eval(first)(firstIndex), eval(second)(secondIndex))
-
-  # global invader
-  # invader = 'poop'
-
   return [eval(first)(firstIndex), eval(second)(secondIndex)]
-
-
-# class ourAgentTracker():
-#   def __init__(self, agent1, agent2):
-#     print("index of offensiveAgent1", agent1.index)
-#     print("index of offensiveAgent2", agent2.index)
-#     self.agent1 = agent1
-#     self.agent2 = agent2
-#     self.agent1_index = agent1.index
-#     self.agent2_index = agent2.index
-#     self.agent1_chasing_enemy = False
-#     self.agent2_chasing_enemy = False
 
 ##########
 # Agents #
@@ -167,9 +125,6 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
   we give you to get an idea of what an offensive agent might look like,
   but it is by no means the best or only way to build an offensive agent.
   """
-
-  # def __init__(self, index):
-  #   print("index", index)
 
   def getFeatures(self, gameState, action):
     features = util.Counter()
@@ -263,37 +218,6 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
           print "Run away from enemy pacman one!"
           runawayPacmanOne = True
 
-          # IF ACTIONS == REVERSE BECAUSE OF ENEMY PACMAN, FORGET ABOUT FOOD? -> A-STAR another path?
-
-          # rev = Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
-          # if action == rev: features['reverse'] = 1
-
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # attackers = [a for a in enemies if a.isPacman and a.getPosition() != None]  # in range
-          #
-          # # min_ghost_distance = 3
-          # # min_ghost = None
-          # ghost_positions = []
-          # closeAttackers = []
-          #
-          # if enemy_one_position is not None:
-          #   ghost_positions.append((enemy_one_position, enemy_one))
-          # if enemy_two_position is not None:
-          #   ghost_positions.append((enemy_two_position, enemy_two))
-          # min_distance = 999
-          # for ghost in ghost_positions:  # 1 or 2 ghosts
-          #   current_ghost_distance = self.getMazeDistance(myPos, ghost[0])
-          #   if min_distance > current_ghost_distance:  # always updates
-          #     min_distance = current_ghost_distance
-          #     min_ghost = ghost[1]
-          #     if min_distance < 2:
-          #       closeAttackers.append(min_ghost)
-          #
-          # features['numCloseAttackers'] = len(closeAttackers)
-          # if len(closeAttackers) > 0:
-          #   print "ONE ATTACK!"
-          #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in closeAttackers]
-          #   features['closeAttackerDistance'] = -min(dists)
         else:
           print "Kill enemy pacman one!"
           killPacmanOne = True
@@ -311,30 +235,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
               enemy2 = i
             j = j + 1
 
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # print ('ENEMIES: ', enemies)
-
-          # invaders = []
-          # v = 0
-          # for a in enemies:
-          #   if a.isPacman and a.getPosition() != None:
-          #     invaders.append(a)
-          #     if (v == 0):
-          #       enemy1 = i
-          #     if (v == 1):
-          #       enemy2 = i
-          #     v = v + 1
           invaders = [a for a in enemies if a.isPacman and a.getPosition() != None]  # in range
-          # myRangeDist = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-          # teammateRangeDist = [self.getMazeDistance(teammatePos, a.getPosition()) for a in invaders]
-          # distDifference = abs(min(myRangeDist) - min(teammateRangeDist))
-          # if (min(myRangeDist) <= min(teammateRangeDist) and distDifference < 16):
-          # if ((invader1[0] == True and invader2[0] == False) or (invader2[0] == True and invader1[0] == False)):
-          # print ("INDEX: ", self.index)
-          # global agentOneTarget
-          # global agentOneIndex
-          # global agentTwoTarget
-          # global agentTwoIndex
 
           if len(invaders) == 1:
             if agentOneTarget is None and agentTwoTarget is None:  # initialize if none
@@ -379,62 +280,25 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
                 agentTwoIndex = self.index
             features['numInvaders'] = len(invaders)
             if len(invaders) > 0:
-              print "FACK"
               dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
               features['invaderDistance'] = min(dists)
               if (min(dists) < 3):
                 print "KILL INVADER"
                 features['killInvader'] += 1  # seems to work mostly (NO, ITS STILL BROKEN ADJUST WEIGHTS)
-                # print ("INDEX: ", self.index)
-                # features['numInvaders'] = len(invaders)
-                # if len(invaders) > 0:
-                #   print "FACK"
-                #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-                #   features['invaderDistance'] = min(dists)
-                #   if (min(dists) < 3):
-                #     print "KILL INVADER"
-                #     features['killInvader'] += 1  # seems to work mostly
-                # else:
-                #   invader = "no"
+
       elif enemy_one_position is not None and not enemy_one.isPacman:  # enemy not pacman
         if gameState.getAgentState(enemy_one_index).scaredTimer > 0:
           print "Kill enemy one!"
           killOne = True
 
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # defenders = [a for a in enemies if not a.isPacman and a.getPosition() != None]  # in range
-          # features['numDefenders'] = len(defenders)
-          # if len(defenders) > 0:
-          #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in defenders]
-          #   if min(dists) <= 3: #tune
-          #     print "Kill enemy one!"
-          #     features['defenderDistance'] = min(dists)
         else:
-          # if (gameState.getAgentState(self.index).isPacman):
           print "Run away from enemy one!"
           runawayOne = True
 
-          # if(not successor.getAgentState(self.index).isPacman):       // THIS ONE MAKES BOTH OF THEM STOP
-          #   # Computes whether we're on defense (1) or offense (0)
-          #   features['onDefense'] = 1
-          #
-          # if successor.getAgentState(self.index).isPacman:
-          #   features['onDefense'] = 0
-
           enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
 
-          # defenders = []
-
-          # for a in enemies:
-          #   if not a.isPacman and a.getPosition() != None:
-          #     if agentOneIndex == self.index and successor.getAgentState(agentOneTarget) is not a:  # if ghost scaring you doesn't match your target, don't include it
-          #       print "OMG"
-          #     else:
-          #       defenders.append(a)
           defenders = [a for a in enemies if not a.isPacman and a.getPosition() != None]  # in range
 
-          # min_ghost_distance = 3
-          # min_ghost = None
           ghost_positions = []
           closeDefenders = []
 
@@ -452,101 +316,28 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
                 features['onDefense'] = 1
               if min_distance < 3:
                 closeDefenders.append(min_ghost)
-          # min_ghost_distance = min_distance
 
-          # if (successor.getAgentState(teamNumbers[0]).isPacman and successor.getAgentState(teamNumbers[1]).isPacman):
-          #   x = 0
-          # else:
-          # if len(closeDefenders) > 0 and ((agentOneIndex == self.index and successor.getAgentState(agentOneTarget) is not closeDefenders[0]) or (agentTwoIndex == self.index and successor.getAgentState(agentTwoTarget) is not closeDefenders[0])):
-          #   print "Do nothing, kill invader"
           if ((agentOneIndex == self.index) or (agentTwoIndex == self.index)):
             print "Do nothing, kill invader1"
           else:
             features['numCloseDefenders'] = len(closeDefenders)
             if len(closeDefenders) > 0:
               print "ONE!"
-              # if (not successor.getAgentState(self.index).isPacman):
-              #   # Computes whether we're on defense (1) or offense (0)
-              #   features['onDefense'] = 1
-              #
-              # if successor.getAgentState(self.index).isPacman:
-              #   features['onDefense'] = 0
+
               features['onDefense'] = 1
               if successor.getAgentState(self.index).isPacman:
                 features['onDefense'] = 0
 
                 dists = [self.getMazeDistance(myPos, a.getPosition()) for a in closeDefenders]
                 features['closeDefenderDistance'] = -min(dists)
-              #      -min(dists) - 1000?
 
       if enemy_two_position is not None and enemy_two.isPacman:
         if gameState.getAgentState(self.index).scaredTimer > 0:
           print "Run away from enemy pacman two!"
           runawayPacmanTwo = True
 
-          # IF ACTIONS == REVERSE BECAUSE OF ENEMY PACMAN, FORGET ABOUT FOOD? -> A-STAR another path?
-
-          # rev = Directions.REVERSE[gameState.getAgentState(self.index).configuration.direction]
-          # if action == rev: features['reverse'] = 1
-
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # attackers = [a for a in enemies if a.isPacman and a.getPosition() != None]  # in range
-          #
-          # # min_ghost_distance = 3
-          # # min_ghost = None
-          # ghost_positions = []
-          # closeAttackers = []
-          #
-          # if enemy_one_position is not None:
-          #   ghost_positions.append((enemy_one_position, enemy_one))
-          # if enemy_two_position is not None:
-          #   ghost_positions.append((enemy_two_position, enemy_two))
-          # min_distance = 999
-          # for ghost in ghost_positions:  # 1 or 2 ghosts
-          #   current_ghost_distance = self.getMazeDistance(myPos, ghost[0])
-          #   if min_distance > current_ghost_distance:  # always updates
-          #     min_distance = current_ghost_distance
-          #     min_ghost = ghost[1]
-          #     if min_distance < 2:
-          #       closeAttackers.append(min_ghost)
-          #
-          # features['numCloseAttackers'] = len(closeAttackers)
-          # if len(closeAttackers) > 0:
-          #   print "TWO ATTACK!"
-          #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in closeAttackers]
-          #   features['closeAttackerDistance'] = -min(dists)
         else:
           print "Kill enemy pacman two!"
-          # killPacmanTwo = True
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # invaders = [a for a in enemies if a.isPacman and a.getPosition() != None]  # in range
-          # features['numInvaders'] = len(invaders)
-          # if len(invaders) > 0:
-          #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-          #   features['invaderDistance'] = min(dists)
-          #   if (min(dists) < 3):
-          #     print "KILL INVADER"
-          #     features['killInvader'] += 1 #seems to work mostly
-          # global invader
-          #
-          # if (invader == "no"):
-          #   print ("INVADER BOOL BEFORE: ", invader)
-          #   invader = "yes"
-          #   print ("INVADER BOOL AFTER: ", invader)
-
-          # global invader1
-          # global invader2
-          #
-          # if (self.index == teamNumbers[0]):  # first time will make one of them (True, False) and the other (False, False)
-          #   invader1[0] = False
-          #   invader1[1] = True
-          #   # invader2[0] = False
-          #   # invader2[1] = False
-          # elif (self.index == teamNumbers[1]):
-          #   # invader1[0] = False
-          #   # invader1[1] = False
-          #   invader2[0] = False
-          #   invader2[1] = True
 
           killPacmanOne = True
 
@@ -564,20 +355,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
               enemy2 = i
             j = j + 1
 
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-
           invaders = [a for a in enemies if a.isPacman and a.getPosition() != None]  # in range
-          # myRangeDist = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-          # teammateRangeDist = [self.getMazeDistance(teammatePos, a.getPosition()) for a in invaders]
-          # distDifference = abs(min(myRangeDist) - min(teammateRangeDist))
-          # if (min(myRangeDist) <= min(teammateRangeDist) and distDifference < 16):
-          # if (min(myRangeDist) <= min(teammateRangeDist)):
-          # if ((invader1[1] == True and invader2[1] == False) or (invader2[1] == True and invader1[1] == False)):
-
-          # global agentOneTarget
-          # global agentOneIndex
-          # global agentTwoTarget
-          # global agentTwoIndex
 
           if len(invaders) == 1:
             if agentOneTarget is None and agentTwoTarget is None:  # initialize if none
@@ -622,53 +400,24 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
                 agentTwoIndex = self.index
             features['numInvaders'] = len(invaders)
             if len(invaders) > 0:
-              print "FACK 2"
               dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
               features['invaderDistance'] = min(dists)
               if (min(dists) < 3):
                 print "KILL INVADER"
                 features['killInvader'] += 1  # seems to work mostly (NO IT DOESN'T, MAKE IT NEGATIVE?)
-                # print ("INDEX2: ", self.index)
-                # features['numInvaders'] = len(invaders)
-                # if len(invaders) > 0:
-                #   print "FACK 2"
-                #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in invaders]
-                #   features['invaderDistance'] = min(dists)
-                #   if (min(dists) < 3):
-                #     print "KILL INVADER"
-                #     features['killInvader'] += 1  # seems to work mostly
-                # else:
-                #   invader = "no"
+
       elif (enemy_two_position is not None) and not enemy_two.isPacman:  # enemy not pacman
         if gameState.getAgentState(enemy_two_index).scaredTimer > 0:
           print "Kill enemy two!"
           killTwo = True
-          # enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
-          # defenders = [a for a in enemies if not a.isPacman and a.getPosition() != None]  # in range
-          # features['numDefenders'] = len(defenders)
-          # if len(defenders) > 0:
-          #   dists = [self.getMazeDistance(myPos, a.getPosition()) for a in defenders]
-          #   if min(dists) <= 3:
-          #     print "Kill enemy two!"
-          #     features['defenderDistance'] = min(dists)
+
         else:
-          # if (gameState.getAgentState(self.index).isPacman):
           print "Run away from enemy two!"
           runawayTwo = True
           enemies = [successor.getAgentState(i) for i in self.getOpponents(successor)]
 
-          # defenders = []
-          #
-          # for a in enemies:
-          #   if not a.isPacman and a.getPosition() != None:
-          #     if agentOneIndex == self.index and successor.getAgentState(agentOneTarget) is not a: #if ghost scaring you doesn't match your target, don't include it //double check you are agent 1
-          #       print "OMG2"
-          #     else:
-          #       defenders.append(a)
           defenders = [a for a in enemies if not a.isPacman and a.getPosition() != None]  # in range
 
-          # min_ghost_distance = 3
-          # min_ghost = None
           ghost_positions = []
           closeDefenders = []
 
@@ -686,15 +435,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
                 features['onDefense'] = 1
               if min_distance < 3:
                 closeDefenders.append(min_ghost)
-          # min_ghost_distance = min_distance
 
-          # if len(closeDefenders) > 0 and (agentOneIndex == self.index and successor.getAgentState(agentOneTarget) is not closeDefenders[0]):
-          #   print "Do nothing2"
-          # else:
-
-          # has a target so ghost distance doesn't affect it!!?
-          # if len(closeDefenders) > 0 and ((agentOneIndex == self.index and successor.getAgentState(agentOneTarget) is not closeDefenders[0]) or (agentTwoIndex == self.index and successor.getAgentState(agentTwoTarget) is not closeDefenders[0])):
-          #   print "Do nothing, kill invader"
           if ((agentOneIndex == self.index) or (agentTwoIndex == self.index)):
             print "Do nothing, kill invader2"
           else:
@@ -702,22 +443,13 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
             if len(closeDefenders) > 0:
               print "TWO!"
 
-              # features['onDefense'] = 1
               if successor.getAgentState(self.index).isPacman:
                 features['onDefense'] = 0
 
                 dists = [self.getMazeDistance(myPos, a.getPosition()) for a in closeDefenders]
                 features['closeDefenderDistance'] = -min(dists)
-              #     -min(dists) - 1000?
-
-
-              # ghost_positions = [enemy_one_position, enemy_two_position]
-              # min_ghost_distance = min([self.getMazeDistance(myPos, ghost) for ghost in ghost_positions]) # after making move, get min distance to next food in successor food list
-              # #min_ghost_distance = min([util.manhattanDistance(myPos, ghost) for ghost in ghost_positions])
-              # features['closest_ghost'] = 1/(min_ghost_distance + 0.1)
 
     # Compute distance to the nearest food
-    # currentFoodList = self.getFood(gameState).asList()
     foodList = self.getFood(successor).asList()  # based on successor
 
     if (self.index == 0 or self.index == 1):
@@ -743,18 +475,7 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
     else:
       newFoodList = bottomFood  # changed to topFood not foodList lol
 
-    # and ((self.index != agentOneIndex and self.index != agentTwoIndex))
-
     if len(foodList) > 0:  # This should always be True,  but better safe than sorry
-      # if(self.index != agentOneIndex and self.index != agentTwoIndex):
-      #   minCapsuleDistance = 999
-      #   for capsule in capsuleList:
-      #     currCapsuleDist = self.getMazeDistance(myPos, capsule)
-      #     if minCapsuleDistance > currCapsuleDist:
-      #       minCapsuleDistance = currCapsuleDist
-      #   # minCapsuleDistance = min([self.getMazeDistance(myPos, capsule) for capsule in capsuleList])
-      #   if minCapsuleDistance < 2:
-      #     features['munchCapsule'] = 1
 
       myPos = successor.getAgentState(self.index).getPosition()  # coordinates of where you are after move
       if (len(newFoodList) > 0):
@@ -783,96 +504,17 @@ class OffensiveReflexAgent(ReflexCaptureAgent):
           if min_distance > current_teammate_distance:  # always updates
             min_distance = current_teammate_distance
             min_teammate = teammate[1]
-            # if successor.getAgentState(enemy_one_index).isPacman or successor.getAgentState(enemy_two_index).isPacman:
-            # if successor.getAgentState(enemy_one_index).getPosition() is None and successor.getAgentState(enemy_two_index).getPosition() is None:
+
             if min_distance < 2:  # or some other min distance < 3?
               closeTeammates.append(min_teammate)
-            # else:
-            #   if min_distance < 0:  # i.e., never gets called, faster food collection? It probably isn't faster (you need to do a* on food instead)
-            #     closeTeammates.append(min_teammate)
-        # min_ghost_distance = min_distance
 
         features['numCloseTeammates'] = len(closeTeammates)
         if len(closeTeammates) > 0:
           print "CLOSE TEAMMATE!"
           dists = [self.getMazeDistance(myPos, a.getPosition()) for a in closeTeammates]
           features['closeTeammateDistance'] = -min(dists)
-      # teamSeparationDistance = self.getMazeDistance(gameState.getAgentState(teamNumbers[0]).getPosition(),
-      #                                               gameState.getAgentState(teamNumbers[1]).getPosition())
-      # print ('Team Separation Distance: ', teamSeparationDistance)
-      # nextTeamSeparationDistance = self.getMazeDistance(successor.getAgentState(teamNumbers[0]).getPosition(),
-      #                                                   successor.getAgentState(teamNumbers[1]).getPosition())
-      # if teamSeparationDistance < nextTeamSeparationDistance:
-      #   # features['separateAgents'] = (self.index) # still causes tons of issues
-      #   features['separateAgents'] = teamSeparationDistance  # still causes tons of issues make it based on distance (closer = higher)
-      features['distanceToFood'] = min_food_distance
 
-      # minCapsuleDistance = 999
-      # for capsule in capsuleList:
-      #   currCapsuleDist = self.getMazeDistance(myPos, capsule)
-      #   if minCapsuleDistance > currCapsuleDist:
-      #     minCapsuleDistance = currCapsuleDist
-      # # minCapsuleDistance = min([self.getMazeDistance(myPos, capsule) for capsule in capsuleList])
-      # # if minCapsuleDistance < 2:
-      # #   features['avoidCapsule'] = 1
-      #
-      # # if len(currCapsuleList) > len(capsuleList): # If capsule is going to be eaten
-      # cap_ghost_positions = []
-      # if enemy_one_position is not None and not successor.getAgentState(
-      #         enemy_one_index).isPacman:  # only adds when ghost is near you on enemy side and isn't scared
-      #   if not gameState.getAgentState(enemy_one_index).scaredTimer > 0:
-      #     cap_ghost_positions.append((enemy_one_position, enemy_one))
-      # if enemy_two_position is not None and not successor.getAgentState(
-      #         enemy_two_index).isPacman:  # only adds when ghost is near you on enemy side and isn't scared
-      #   if not gameState.getAgentState(enemy_two_index).scaredTimer > 0:
-      #     cap_ghost_positions.append((enemy_two_position, enemy_two))
-      # min_distance1 = 999
-      # for ghost in cap_ghost_positions:  # 1 or 2 ghosts FOR YOURSELF
-      #   current_ghost_distance_me = self.getMazeDistance(myPos, ghost[0])
-      #   if min_distance1 > current_ghost_distance_me:  # always updates
-      #     min_distance1 = current_ghost_distance_me
-      #     min_ghost = ghost[1]
-      # # print "MIN DIST 1: ", min_distance1
-      # if min_distance1 < 5:  # There is a ghost chasing you (closeDefender)
-      #   # closeDefenders.append(min_ghost)
-      #   t = 0
-      #   # if gameState.getAgentState(self.index).isPacman:
-      #     # Compute distance to the nearest capsule
-      #   if len(capsuleList) > 0:
-      #     if len(currCapsuleList) > len(capsuleList):  # If capsule is going to be eaten
-      #       print "YOU CAPSULE EAT"
-      #       features['munchCapsule'] = 100 # eat it (improve to finding closest capsule instead)
-      #
-      # # else:  # ghost isn't near you
-      # #   t = 0
-      # #   if len(currCapsuleList) > len(capsuleList):  # If capsule is going to be eaten by you
-      # #     if gameState != successor:  # if you are stopped you shouldn't avoid capsule
-      # #       features['avoidCapsule'] = -1  # don't eat it (save for later use)
-      # #       print "YOU CAPSULE AVOID"
-      # min_distance2 = 999
-      # for ghost in cap_ghost_positions:  # 1 or 2 ghosts FOR TEAMMATE
-      #   current_ghost_distance_teammate = self.getMazeDistance(teammatePos, ghost[0])
-      #   if min_distance2 > current_ghost_distance_teammate:  # always updates
-      #     min_distance2 = current_ghost_distance_teammate
-      #     min_ghost = ghost[1]
-      # # print "MIN DIST 2: ", min_distance2
-      # if min_distance2 < 5:  # There is a ghost chasing teammate (closeDefender)
-      #   # closeDefenders.append(min_ghost)
-      #   t = 0
-      #   # if len(capsuleList) > 0:
-      #   #   minDistance = min([self.getMazeDistance(myPos, capsule) for capsule in capsuleList])
-      #   #   features['distanceToCapsule'] = minDistance
-      #   # if gameState.getAgentState(teammateIndex).isPacman:
-      #   if len(capsuleList) > 0:
-      #     if len(currCapsuleList) > len(
-      #             capsuleList):  # If capsule is going to be eaten by you (you happen to get to a capsule before teammate)
-      #       features['munchCapsule'] = 100  # eat it (improve to finding closest capsule instead)
-      #       print "TEAMMATE CAPSULE EAT"
-      # # else:  # ghost isn't near your teammate
-      # #   if len(currCapsuleList) > len(capsuleList):  # If capsule is going to be eaten by you
-      # #     if gameState != successor:  # if you are stopped you shouldn't avoid capsule
-      # #       features['avoidCapsule'] = -1  # don't eat it (save for later use)
-      # #       print "TEAMMATE CAPSULE AVOID" #sometimes it has to
+      features['distanceToFood'] = min_food_distance
 
     return features
 
